@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.blue_grey-orange.min.css">
   <script src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+  <script src="https://cdn.firebase.com/libs/geofire/4.1.2/geofire.min.js"></script>
 
   <link rel="stylesheet" href="main.css">
 </head>
@@ -36,14 +37,26 @@
     <h3 class="logo">Database Web Quickstart</h3>
     Username
     <textarea id="user-name"></textarea>
-    Email
-    <textarea id="user-email"></textarea>
+    Latitude
+    <textarea id="user-lat"></textarea>
+    Longitude
+    <textarea id="user-long"></textarea>
     <div>
       <button id="add-data-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i>Add data!</button>
     </div>
 
     <div>
       <button id="read-data-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i>Read data!</button>
+    </div>
+    <h3 class="logo">Get Closest Users</h3>
+    Latitude
+    <textarea id="query-lat"></textarea>
+    Longitude
+    <textarea id="query-long"></textarea>
+    Radius (km)
+    <textarea id="query-radius"></textarea>
+    <div>
+      <button id="query-data-button" class="mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i>Get Users!</button>
     </div>
 
 <script src="/__/firebase/5.5.7/firebase-app.js"></script>

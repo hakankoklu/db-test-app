@@ -18,35 +18,64 @@
 
 // Shortcuts to DOM Elements.
 var addDataButton = document.getElementById('add-data-button');
-var readDataButton = document.getElementById('read-data-button')
+var readDataButton = document.getElementById('read-data-button');
+var queryDataButton = document.getElementById('query-data-button');
 var userNameField = document.getElementById('user-name');
-var userEmailField = document.getElementById('user-email');
+var userLatField = document.getElementById('user-lat');
+var userLongField = document.getElementById('user-long');
+var queryLatField = document.getElementById('query-lat');
+var queryLongField = document.getElementById('query-long');
+var radiusField = document.getElementById('query-radius');
+// random Firebase location
+var locationRef = firebase.database().ref('location');
+var database = firebase.database();
+// Create a new GeoFire instance at the random Firebase location
+var geoFire = new GeoFire(locationRef);
 
-/**
- * Saves a new post to the Firebase DB.
- */
-// [START write_fan_out]
+
 function addUser() {
-  // A post entry.
     var username = userNameField.value;
-    var email = userEmailField.value;
-    var userRef = firebase.database().ref('users/' + username);
-    console.log("Writing " + username + " " + email);
-    userRef
-        .set({
-            username: username,
-            email: email
+    var latitude = parseFloat(userLatField.value);
+    var longitude = parseFloat(userLongField.value);
+    var myID = locationRef.push().key;
+
+    geoFire.set(myID, [latitude, longitude])
+        .then(function () {
+            database.ref('users/' + myID).set(
+                {
+                    username: username,
+                }
+            ).then(function () {
+                console.log("Placing " + username + " to " + latitude + ", " + longitude);
+            });
         });
+
 }
 
 function readData() {
-    firebase.database().ref().once('value').then(function(snapshot) {
+    database.ref().once('value').then(function(snapshot) {
         console.log(snapshot.val());
     });
+}
+
+function queryData() {
+    var lat = parseFloat(queryLatField.value);
+    var lon = parseFloat(queryLongField.value);
+    var radius = parseFloat(radiusField.value);
+    var geoQuery = geoFire.query({
+        center: [lat, lon],
+        radius: radius
+    });
+    geoQuery.on("key_entered", function(key, location, distance) {
+        database.ref('users/' + key).once('value').then(function(snapshot) {
+            console.log(snapshot.val().username + " is located at [" + location + "] which is within the query (" + distance.toFixed(2) + " km from center)");
+        });
+      });
 }
 
 // Bindings on load.
 window.addEventListener('load', function() {
     addDataButton.addEventListener('click', addUser);
     readDataButton.addEventListener('click', readData);
+    queryDataButton.addEventListener('click', queryData);
     }, false);

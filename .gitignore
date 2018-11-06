@@ -63,3 +63,10 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# IDE
+.idea/
+.python-version
+.sublimelinterrc
+.dir-locals.el
+.vscode
